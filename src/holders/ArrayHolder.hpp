@@ -19,6 +19,7 @@ public:
     };
     virtual void put(T*);
     virtual T* get(string);
+    virtual T* get(int);
     virtual int size();
 };
 
@@ -30,6 +31,11 @@ T* ArrayHolder<T>::get(string name) {
         }
     }
     return NULL;
+}
+
+template<class T>
+T* ArrayHolder<T>::get(int index) {
+    return this->data[index];
 }
 
 template<class T>

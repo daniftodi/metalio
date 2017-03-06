@@ -4,10 +4,6 @@
 
 #include "Metal.h"
 
-void saveConfigCallback () {
-  Serial.println("Should save config");
-}
-
 Metal::Metal(int maxFunctionHolder) {
     this->fHolder = new ArrayHolder<Function>(maxFunctionHolder);
 }
@@ -64,8 +60,8 @@ int Metal::execute(string inputQuery) {
     return EXIT_FAILURE;
 }
 
-void Metal::readConfig() {
-    /*if (SPIFFS.begin()) {
+/*void Metal::readConfig() {
+    if (SPIFFS.begin()) {
       Serial.println("mounted file system");
       if (SPIFFS.exists("/config.json")) {
         //file exists, reading and loading
@@ -95,14 +91,15 @@ void Metal::readConfig() {
       }
     } else {
       Serial.println("failed to mount FS");
-  } */
-}
+  }
+}*/
 
-void Metal::initWifiManager() {
+void Metal::initDefaultWifiManager() {
+
     //this->readConfig();
 
 
-    char mqtt_server[40] = "mqtt server";
+    /*char mqtt_server[40] = "mqtt server";
     char mqtt_port[6] = "8080";
     char mqtt_topic[63] = "mqtt/topic";
 
@@ -145,10 +142,6 @@ void Metal::initWifiManager() {
 
 }
 
-void Metal::configSaver() {
+/*void Metal::configSaver() {
    this->shouldSaveConfig = true;
-}
-
-void Metal::startConfigPortal() {
-    this->wifiManager.startConfigPortal(WIFI_SSID, WIFI_PASS);
-}
+} */

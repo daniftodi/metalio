@@ -2,14 +2,14 @@
 // Created by diftodi on 2/6/17.
 //
 
-#ifndef METAL_SAYHELLO_H
-#define METAL_SAYHELLO_H
+#ifndef METAL_PRINTFUNCTION_H
+#define METAL_PRINTFUNCTION_H
 
 #include "../abstract/Function.h"
 #include <Arduino.h>
 typedef String string;
-template<class T> inline Print &operator <<(Print &obj, T arg) { obj.print(arg); return obj; }
 
+template<class T> inline Print &operator <<(Print &obj, T arg) { obj.print(arg); return obj; }
 class PrintFunction : public Function {
 public:
     PrintFunction() : Function() {};
@@ -21,4 +21,4 @@ public:
 private:
     Stream *stream;
 };
-#endif //UNTITLED_SAYHELLO_H
+#endif //METAL_PRINTFUNCTION_H
