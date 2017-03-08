@@ -22,13 +22,8 @@ public:
     string* getFunctionArgs(const string inputQuery);
     int execute(string inputQuery);
     void put(Function*);
-    void startConfigPortal(const char*, const char*);
-    void initDefaultWifiManager();
-    Metal& operator<<(const char* arg) { this->outputStream->print(arg); return *this; }
 private:
     ArrayHolder<Function>* fHolder;
-    Stream* outputStream;
-    Stream* errorStream;
 
     virtual string* tokenizer(const string inputQuery, const int count);
     int getArgsCount(string* args);

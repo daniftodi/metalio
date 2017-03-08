@@ -17,33 +17,48 @@ WiFiClient wifiClient;
 WiFiManager wifiManager;
 PubSubClient mqttClient(wifiClient);
 
-MqttStream* outputStream = new MqttStream(&mqttClient, "metal/stdout");
+//MqttStream* outputStream = new MqttStream(&mqttClient, "metal/stdout");
 
 Metal* metal = new Metal(2);
-MetalWifiManager* metalWifiManager = new MetalWifiManager(&wifiManager, 5);
+MetalWifiManager* metalWifiManager = new MetalWifiManager();
 
 auto countFunction = new CountFunction("count");
 auto sayFunction = new PrintFunction("print", &Serial);
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("Message arrived [");
+  Serial.print(topic);
+  Serial.print("] ");
+  for (int i=0;i<length;i++) {
+    Serial.print((char)payload[i]);
+  }
+  Serial.println();
+}
 
 void setup() {
 
   pinMode(TRIGGER_PIN, INPUT);
   Serial.begin(9600);
-
-  Serial << "Metal put functions";
-  metal->put(sayFunction);
-  metal->put(countFunction);
-
   Serial << "Metal init Manager";
-  *metal << "Metal init";
-  metalWifiManager->addParameter("mqtt_server", "mqtt server");
-  metalWifiManager->addParameter("mqtt_client", "mqtt client");
+    metalWifiManager->setWifiManager(&wifiManager);
+    metalWifiManager->loadData();
+    metalWifiManager->autoConnect(WIFI_SSID, WIFI_PASS);
 
-  metalWifiManager->autoConnect(WIFI_SSID, WIFI_PASS);
-  metal->execute("print:Hello World!");
+    Serial.println("local ip");
+    Serial.println(WiFi.localIP());
+    Serial << "Status: " << WiFi.status() << " " << WL_CONNECTED;
+    //here we have internet and can connect to mqtt broker
+    mqttClient.setServer(metalWifiManager->mqtt_server, atoi(metalWifiManager->mqtt_port));
+    mqttClient.setCallback(callback);
 
-  metalWifiManager->getParameter("mqtt_server").getValue();
-
+    if (mqttClient.connect(metalWifiManager->mqtt_device, metalWifiManager->mqtt_user, metalWifiManager->mqtt_password)) {
+      mqttClient.publish("turnOn",metalWifiManager->mqtt_device);
+      mqttClient.publish("turnOn", metalWifiManager->mqtt_topic);
+      mqttClient.subscribe(metalWifiManager->mqtt_topic);
+      Serial << "Subscribed to " << metalWifiManager->mqtt_topic;
+  } else {
+    Serial << "Something happened, can't connect to mqtt broker";
+  }
 }
 
 void loop() {
