@@ -9,7 +9,11 @@
 #include <Arduino.h>
 typedef String string;
 
+#ifndef PRINT_AS_STREAM
+#define PRINT_AS_STREAM
 template<class T> inline Print &operator <<(Print &obj, T arg) { obj.print(arg); return obj; }
+#endif
+
 class PrintFunction : public Function {
 public:
     PrintFunction() : Function() {};

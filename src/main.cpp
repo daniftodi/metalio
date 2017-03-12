@@ -9,56 +9,43 @@
 
 #include "functions/PrintFunction.h"
 #include "functions/CountFunction.h"
-#include "metal/MqttStream.h"
+#include "functions/DigitalWriteFunction.h"
+#include "metal/MetalMqttManager.h";
 #include "Metal.h"
 
+//mqtt callback used to receive messages
+void mqttReceiver(char* topic, byte* payload, unsigned int length);
 
+//data initialization
 WiFiClient wifiClient;
 WiFiManager wifiManager;
 PubSubClient mqttClient(wifiClient);
 
-//MqttStream* outputStream = new MqttStream(&mqttClient, "metal/stdout");
-
-Metal* metal = new Metal(2);
+Metal* metal = new Metal(3);
 MetalWifiManager* metalWifiManager = new MetalWifiManager();
+MetalMqttManager* metalMqttManager;
 
+//metal supported functions initialization
 auto countFunction = new CountFunction("count");
-auto sayFunction = new PrintFunction("print", &Serial);
-
-void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
-  for (int i=0;i<length;i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println();
-}
+auto printFunction = new PrintFunction("print", &Serial);
+auto digitalWriteFunction = new DigitalWriteFunction("digitalWrite");
 
 void setup() {
-
   pinMode(TRIGGER_PIN, INPUT);
   Serial.begin(9600);
-  Serial << "Metal init Manager";
-    metalWifiManager->setWifiManager(&wifiManager);
-    metalWifiManager->loadData();
-    metalWifiManager->autoConnect(WIFI_SSID, WIFI_PASS);
 
-    Serial.println("local ip");
-    Serial.println(WiFi.localIP());
-    Serial << "Status: " << WiFi.status() << " " << WL_CONNECTED;
-    //here we have internet and can connect to mqtt broker
-    mqttClient.setServer(metalWifiManager->mqtt_server, atoi(metalWifiManager->mqtt_port));
-    mqttClient.setCallback(callback);
+  //adding MetalIO supported functions
+  metal->put(countFunction);
+  metal->put(printFunction);
+  metal->put(digitalWriteFunction);
 
-    if (mqttClient.connect(metalWifiManager->mqtt_device, metalWifiManager->mqtt_user, metalWifiManager->mqtt_password)) {
-      mqttClient.publish("turnOn",metalWifiManager->mqtt_device);
-      mqttClient.publish("turnOn", metalWifiManager->mqtt_topic);
-      mqttClient.subscribe(metalWifiManager->mqtt_topic);
-      Serial << "Subscribed to " << metalWifiManager->mqtt_topic;
-  } else {
-    Serial << "Something happened, can't connect to mqtt broker";
-  }
+  //initializing & connecting to Wifi newtork
+  metalWifiManager->setWifiManager(&wifiManager);
+  metalWifiManager->autoConnect(WIFI_SSID, WIFI_PASS);
+
+  //setup mqtt connection
+  metalMqttManager = new MetalMqttManager(metalWifiManager, &mqttClient, mqttReceiver);
+  metalMqttManager->setOutputStream(&Serial);
 }
 
 void loop() {
@@ -66,4 +53,16 @@ void loop() {
   if ( digitalRead(TRIGGER_PIN) == LOW ) {
       metalWifiManager->startConfigPortal(WIFI_SSID, WIFI_PASS);
   }
+  metalMqttManager->loop();
+}
+
+//mqtt callback implementation
+void mqttReceiver(char* topic, byte* payload, unsigned int length) {
+ Serial << "Message arrived [" << topic << "]" << "\n";
+ string query = (const char*) payload;
+ query = query.substring(0,length);
+
+ if(metal->execute(query) == EXIT_FAILURE) {
+   mqttClient.publish(metalWifiManager->mqtt_error_topic, "Failed to execute last command");
+ }
 }

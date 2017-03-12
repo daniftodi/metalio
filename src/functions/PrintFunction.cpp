@@ -6,6 +6,6 @@
 
 int PrintFunction::execute(int argc, string* argv) {
     for(int i=1; i < argc; i++) {
-        (*this->stream) << argv[i];
+        (*this->stream) << argv[i] << "\n";
     }
 }

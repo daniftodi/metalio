@@ -33,7 +33,7 @@ void MetalWifiManager::startConfigPortal(const char* ssid, const char* pass) {
   WiFiManagerParameter custom_mqtt_password("password", "mqtt password", mqtt_password, 16);
   WiFiManagerParameter custom_mqtt_device("device", "device name", mqtt_device, 16);
   WiFiManagerParameter custom_mqtt_topic("topic", "mqtt topic", mqtt_topic, 63);
-  WiFiManagerParameter custom_mqtt_error_topic("topic", "mqtt error topic", mqtt_error_topic, 63);
+  WiFiManagerParameter custom_mqtt_error_topic("error_topic", "mqtt error topic", mqtt_error_topic, 63);
 
   this->custom_mqtt_server = &custom_mqtt_server;
   this->custom_mqtt_port = &custom_mqtt_port;
@@ -62,6 +62,8 @@ void MetalWifiManager::startConfigPortal(const char* ssid, const char* pass) {
 }
 
 void MetalWifiManager::autoConnect(const char* ssid, const char* pass) {
+  //load persisted data before trying to connect
+  this->loadData();
   this->wifiManager->autoConnect(ssid, pass);
 }
 
@@ -107,7 +109,6 @@ void MetalWifiManager::loadData() {
 void MetalWifiManager::persistData() {
   //save the custom parameters to FS
   if (shouldSaveConfig) {
-    Serial.println("saving config");
     DynamicJsonBuffer jsonBuffer;
     JsonObject& json = jsonBuffer.createObject();
 
