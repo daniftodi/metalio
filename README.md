@@ -1,5 +1,5 @@
 # METALIO
-METALIO was written in need of moving logic from microcontrollers where is hard to write code because of limited memory and processing power to more powerfull devices. With MetalIO microcontroller will know basic operations ( like put GPIO 1 to state HIGH ) and time consuming operations will happen on other devices. Functions ( aka methods ) from your microcontroller can be invoked in a secure way from anywhere in the world ( thanks to the internet and **mqtt** ). 
+METALIO was written in need of moving logic from microcontrollers where is hard to write code because of limited memory and processing power to more powerfull devices. With MetalIO microcontroller will know basic operations ( like put GPIO 1 to state HIGH ) and time consuming operations will happen on other devices. Functions ( aka methods ) from your microcontroller can be invoked in a secure way from anywhere in the world ( thanks to the internet and **mqtt** ).
 
 ## Features
 - Invoke remote method on your microcontroller
@@ -13,6 +13,8 @@ METALIO was written in need of moving logic from microcontrollers where is hard 
 
 ### Config GUI interface
 
+<img src='http://i.imgur.com/VYjGqcT.png' width='400px' /> <img src='http://i.imgur.com/xj0MYLg.png' width='400px' />
+
 ## Installing
 1. Install [Platform-IO](http://platformio.org/)
 2. git clone https://github.com/daniftodi/metalio.git
@@ -22,7 +24,7 @@ METALIO was written in need of moving logic from microcontrollers where is hard 
 
 ## Releases
 #### 0.1
-- Initial release 
+- Initial release
 
 # WifiManager
 WifiManager is an open-source project that create a GUI interface for configuring ESP8266 devices, was written by [tzapu](https://github.com/tzapu/) and it's available on [https://github.com/tzapu/WiFiManager](https://github.com/tzapu/WiFiManager).
