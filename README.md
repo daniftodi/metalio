@@ -1,9 +1,14 @@
 # METALIO
-METALIO was written in need of moving logic from microcontrollers where is hard to write code because of limited memory and processing power to more powerfull devices. With MetalIO microcontroller will know basic operations ( like put GPIO 1 to state HIGH ) and time consuming operations will happen on other devices. Functions ( aka methods ) from your microcontroller can be invoked in a secure way from anywhere in the world ( thanks to the internet and **mqtt** ).
+The MetalIO role is to move programming logic from microcontrollers (where memory and processing power is a problem) to more powerfull devices like Raspberry. 
+With MetalIO microcontroller will know basic operations ( ex: put GPIO 1 to state HIGH ) and time consuming operations will happen on other devices. Functions from your microcontroller can be invoked in a secure way from anywhere in the world ( over internet using **mqtt protocol** ).
+
+The MetalIO version is of the form A.B.C, where A is the major version, B is the minor version and C is the micro version. If the micro version is zero, it’s omitted from the version string, i.e. the version string is just A.B.
+When a new release only fixes bugs and doesn’t add new features or functionality, the micro version is incremented. When new features are added in a backwards compatible way, the minor version is incremented and the micro version is set to zero. When there are backwards incompatible changes, the major version is incremented and others are set to zero.
+
 
 ## Features
-- Invoke remote method on your microcontroller
-- Easy extend your functionality
+- Invoke remote method from your microcontroller
+- Easy extend your functionality  ( write new methods on your microcontroller )
 - Move logic to more powerfull devices
 - Create advanced solutions in a simple way
 
