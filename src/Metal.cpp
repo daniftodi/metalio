@@ -54,8 +54,10 @@ int Metal::execute(string inputQuery) {
     string functionName = this->getFunctionName(inputQuery);
     Function* currentFunction = this->getHolder()->get(functionName);
     if(currentFunction != NULL) {
-        Serial.print("Metal Function Found"); Serial.println(functionName);
-        currentFunction->execute(this->getArgsCount(argsContainer), argsContainer);
+        int argc = this->getArgsCount(argsContainer);
+        Serial.print("Metal Function Found "); Serial.println(functionName);
+        Serial.print("Metal Arguments Count "); Serial.println(argc);
+        currentFunction->execute(argc, argsContainer);
         return EXIT_SUCCESS;
     }
 

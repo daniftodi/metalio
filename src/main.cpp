@@ -10,6 +10,7 @@
 #include "functions/PrintFunction.h"
 #include "functions/CountFunction.h"
 #include "functions/DigitalWriteFunction.h"
+#include "functions/DHTSensorFunction.h"
 #include "metal/MetalMqttManager.h";
 #include "Metal.h"
 
@@ -21,7 +22,7 @@ WiFiClient wifiClient;
 WiFiManager wifiManager;
 PubSubClient mqttClient(wifiClient);
 
-Metal* metal = new Metal(3);
+Metal* metal = new Metal(4);
 MetalWifiManager* metalWifiManager = new MetalWifiManager();
 MetalMqttManager* metalMqttManager;
 
@@ -29,6 +30,7 @@ MetalMqttManager* metalMqttManager;
 auto countFunction = new CountFunction("count");
 auto printFunction = new PrintFunction("print", &Serial);
 auto digitalWriteFunction = new DigitalWriteFunction("digitalWrite");
+auto dhtSensorFunction = new DHTSensorFunction("dht22", &mqttClient, metalWifiManager->mqtt_device);
 
 void setup() {
   pinMode(TRIGGER_PIN, INPUT);
@@ -38,6 +40,7 @@ void setup() {
   metal->put(countFunction);
   metal->put(printFunction);
   metal->put(digitalWriteFunction);
+  metal->put(dhtSensorFunction);
 
   //initializing & connecting to Wifi newtork
   metalWifiManager->setWifiManager(&wifiManager);

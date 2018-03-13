@@ -9,7 +9,7 @@ Function::Function(const string name) {
 }
 
 int Function::execute(int, string*) {
-    //std::cout<<"Not implemented"<<std::endl;
+  return EXIT_FAILURE;
 }
 
 Function::~Function() {
